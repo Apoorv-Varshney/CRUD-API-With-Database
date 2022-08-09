@@ -1,49 +1,41 @@
 package com.student.services;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.student.dao.StudentRepository;
 import com.student.entity.Student;
 
 @Component
 public class StudentServices {
-
-	public static List<Student> list = new ArrayList<>();
-
-	static {
-		list.add(new Student(101, "ashu", "agra"));
-		list.add(new Student(102, "vivek", "delhi"));
-	}
+	
+	@Autowired
+	private StudentRepository studentRepository;
 
 	public List<Student> getAll() {
-		return list;
+		List<Student> findAll = (List<Student>) studentRepository.findAll();
+		return findAll;
 	}
 
 	public Student getStudent(int id) {
-		return list.stream().filter(i -> i.getId() == id).findFirst().get();
+		return studentRepository.getStudentById(id);
 	}
 
 	public Student createStudent(Student st) {
-		list.add(st);
-		return st;
+		Student save = studentRepository.save(st);
+		return save;
 	}
 
 	public void deleteStudent(int id) {
-		list = list.stream().filter(i -> i.getId() != id).collect(Collectors.toList());
+		studentRepository.deleteById(id);
 	}
 
 	public Student updateStudent(int id, Student st) {
-		list.stream().map(s -> {
-			if (s.getId() == id) {
-				s.setName(st.getName());
-				s.setCity(st.getCity());
-			}
-			return s;
-		}).collect(Collectors.toList());
-		return st;
+		st.setId(id);
+		Student update = studentRepository.save(st);
+		return update;
 	}
 
 }

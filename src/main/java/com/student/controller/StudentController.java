@@ -1,4 +1,4 @@
-package com.student.dao;
+package com.student.controller;
 
 import java.util.List;
 import java.util.Optional;
